@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import {
     TouchableOpacity,
     View, Text,
@@ -13,15 +14,14 @@ import logo from '../../assets/game.png'
 
 const windowWidth = Dimensions.get('window').width;
 
-const Home = ({ navigation }) => {
-    const [name, SetName] = useState()
+const Home = ({ navigation,route }) => {
+    const [name, setName] = useState("")
     const [difficulty, SetDifficulty] = useState("Random")
 
 
     const GetName = nama => {
-        // console.log(nama.nativeEvent.text,'namee')
-
-        SetName(nama.nativeEvent.text)
+    
+        setName(nama)
     }
     const GetDifficulty = esay => {
         // console.log(esay, 'namee')
@@ -35,13 +35,11 @@ const Home = ({ navigation }) => {
             navigation.navigate("Game", {
                 name, difficulty
             })
-  
+            setName("")
         }
     }
-    useEffect(() => {
 
-    }, [name])
-
+ 
     return (
         <ImageBackground source={bgImage} style={styles.backGroundContainer}>
             <View style={styles.logoContainer}>
@@ -53,9 +51,9 @@ const Home = ({ navigation }) => {
                     style={styles.input}
                     placeholderTextColor={'grey'}
                     // underlineColorAndroid='transparent'
-                    onChange={text => GetName(text)}
+                    value={name}
+                    onChangeText={text => GetName(text)}
                 />
-                {/* <Picker /> */}
             </View>
             <View>
                 <Picker

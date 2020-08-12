@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Dimensions, Button, ActivityIndicator } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
 
 import { useDispatch, useSelector } from "react-redux"
 import { setSudoku, setSudokuValidate, setSudokuSolve } from '../store/action/sudokuAction'
@@ -8,14 +7,13 @@ import { setSudoku, setSudokuValidate, setSudokuSolve } from '../store/action/su
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+import { useNavigation } from '@react-navigation/native';
 
-const Board = ()=>{
+const Board = ({ player, difficulty, }) => {
 
 
-    onst { name: player } = route.params || 'uajnga'
-  const { difficulty } = route.params || 'hard'
+  const navigation = useNavigation();
 
-  console.log(difficulty)
   const dispatch = useDispatch()
   const { defaultBoard: game, solution, status, } = useSelector(state => state)
   const [boardNew, setBoardNew] = useState([])
@@ -64,95 +62,96 @@ const Board = ()=>{
       </View>
     )
   }
-  // useEffect(()=>{
 
-  // })
   const push = () => {
-    console.log(newStatus)
+    // console.log(newStatus)
     if (newStatus == 'solved') {
+      // console.log(player)
       navigation.navigate('Finish', { player })
+      setStatus('')
     }
   }
 
 
-  console.log(newStatus, 'cuttyyy1')
+  // console.log(newStatus, 'cuttyyy1')
 
 
   return (
 
-      <View style={styles.container}>
+    <View >
       <View style={styles.header}>
 
         <Text style={{
-          marginRight:0,
-          marginLeft:-40
-          ,paddingRight:50, marginBottom:20,fontSize:17}}>{player}</Text>
-      {
-        status ? <Text
-        style={{marginBottom:30,fontSize:17}}
-        >{status}</Text> : null
-      }
+          marginRight: 0,
+          marginLeft: -40
+          , paddingRight: 50, marginBottom: 20, fontSize: 17
+        }}>{player}</Text>
+        {
+          status ? <Text
+            style={{ marginBottom: 30, fontSize: 17 }}
+          >{status}</Text> : null
+        }
         <Text
-         style={ {paddingLeft:50, marginBottom:20,fontSize:17}}
-         > {difficulty}</Text>
+          style={{ paddingLeft: 50, marginBottom: 20, fontSize: 17 }}
+        > {difficulty}</Text>
       </View>
-        {boardNew.board.map((rows, rowdx) => {
+      {boardNew.board.map((rows, rowdx) => {
 
-          return (
-            <View key={rowdx} style={styles.row} >
+        return (
+          <View key={rowdx} style={styles.row} >
 
-              {rows.map((col, coldx) => {
+            {rows.map((col, coldx) => {
 
-                return (
-                  <TextInput
-                    key={coldx}
-                    textAlign={'center'}
-                    style={[styles.col,
-                    { fontWeight: "bold", backgroundColor: game.board[rowdx][coldx] == 0 ? '#ddf3f5' : '#a6dcef', color: '#e36387' }]}
-                    maxLength={1}
-                    keyboardType={"number-pad"}
-                    value={col == 0 ? "" : col + ""}
-                    editable={game.board[rowdx][coldx] == 0 ? true : false}
-                    onChangeText={text => updateBoard(text, rowdx, coldx)} ></TextInput>
+              return (
+                <TextInput
+                  key={coldx}
+                  textAlign={'center'}
+                  style={[styles.col,
+                  { fontWeight: "bold", backgroundColor: game.board[rowdx][coldx] == 0 ? '#ddf3f5' : '#a6dcef', color: '#e36387' }]}
+                  maxLength={1}
+                  keyboardType={"number-pad"}
+                  value={col == 0 ? "" : col + ""}
+                  editable={game.board[rowdx][coldx] == 0 ? true : false}
+                  onChangeText={text => updateBoard(text, rowdx, coldx)} ></TextInput>
 
-                )
-              })}
-            </View>
-          )
-        })}
-        <View style={{ marginTop:20  ,flexDirection: 'row', justifyContent: "space-around" }}
->
+              )
+            })}
+          </View>
+        )
+      })}
+      <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: "space-around" }}
+      >
 
-        <View style={{marginRight:30}}>
+        <View style={{ marginRight: 30 }}>
 
-          <Button onPress={() => handleSolve(boardNew)} 
-          title="solved"
-          color="#005086"
-          //  style={{fontSize:17}}
+          <Button onPress={() => handleSolve(boardNew)}
+            title="solved"
+            color="#005086"
           >
           </Button>
-          </View>
-
-
-        <View style={{marginLeft:30}} >
-          <Button
-          color="#f194ff"
-          // style={{fontSize:17}}
-          onPress={() => {
-            handleValidate(boardNew)
-            push()
-          }}
-          // onPress={()=>cek()}
-          title="validate">
-          </Button>
-          
-          </View>
         </View>
 
+
+        <View style={{ marginLeft: 30 }} >
+          <Button
+            color="#f194ff"
+            onPress={() => {
+              handleValidate(boardNew)
+              push()
+            }}
+            title="validate">
+          </Button>
+
+        </View>
       </View>
 
-  );
+    </View>
 
+
+
+
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -175,10 +174,11 @@ const styles = StyleSheet.create({
     width: (windowWidth - 30) / 9,
     height: (windowWidth - 30) / 9
   },
-  header:{
-    flexDirection: 'row', 
+  header: {
+    flexDirection: 'row',
     // justifyContent: "space-around" ,
     width: (windowWidth - -30) / 3,
   }
-});
-}
+})
+
+export default Board
